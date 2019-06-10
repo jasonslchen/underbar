@@ -104,6 +104,23 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
+    let unique = [];
+    if (iterator === undefined) {
+      for (let i = 0; i < array.length; i++) {
+        if (unique.indexOf(array[i]) === -1) {
+          unique.push(array[i]);
+        }
+      }
+    } else {
+      let iterate = [];
+      for (let i = 0; i < array.length; i++) {
+        if(iterate.indexOf(iterator(array[i])) === -1) {
+          iterate.push(iterator(array[i]));
+          unique.push(array[i]);
+        }
+      }
+    }
+    return unique;
   };
 
 
