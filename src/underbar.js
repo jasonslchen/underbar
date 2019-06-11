@@ -130,9 +130,9 @@
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
     let newArray = [];
-    for (let i = 0; i < collection.length; i++) {
-      newArray.push(iterator(collection[i]));
-    }
+    _.each(collection, function(item) {
+      newArray.push(iterator(item));
+    })
     return newArray;
   };
 
