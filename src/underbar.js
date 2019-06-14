@@ -177,17 +177,36 @@
   _.reduce = function(collection, iterator, accumulator) {
     var memo = undefined;
     var start = undefined;
-    if (accumulator === undefined) {
-      memo = collection[0];
-      start = 1;
+    if (Array.isArray(collection)) {
+      if (accumulator === undefined) {
+        memo = collection[0];
+        start = 1;
+      } else {
+        memo = accumulator;
+        start = 0;
+      }
+      for (let i = start; i < collection.length; i++) {
+        memo = iterator(memo, collection[i]);
+      }
+      return memo;
     } else {
-      memo = accumulator;
-      start = 0;
+      let values = [];
+      for (let val in collection) {
+        values.push(collection[val]);
+      }
+      if (accumulator === undefined) {
+        memo = values[0];
+        start = 1;
+      } else {
+        memo = accumulator;
+        start = 0;
+      }
+      for (let i = start; i < values.length; i++) {
+        memo = iterator(memo, values[i]);
+      }
+      return memo;
     }
-    for (let i = start; i < collection.length; i++) {
-      memo = iterator(memo, collection[i]);
-    }
-    return memo;
+    
 
   };
 
@@ -206,13 +225,43 @@
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
-    // TIP: Try re-using reduce() here.
+    if (iterator !== undefined) {
+      return _.reduce(collection, function(truth, element) {
+        if (truth) {
+          if (iterator(element)) {
+            return true;
+          } 
+          return false;
+        }
+        return false;
+      }, true);
+    } 
+    return _.reduce(collection, function(truth, element) {
+      if (truth) {
+        if (element) {
+          return true;
+        } 
+        return false;
+      }
+      return false;
+    }, true);
+    
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    if (iterator !== undefined) {
+      return !(_.every(collection, function(val) {
+        return !iterator(val);
+    })); 
+    } else {
+      return !(_.every(collection, function(val) {
+        return !val
+      }))
+    }
+    
   };
 
 
@@ -235,6 +284,9 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    for (let i = 0; i < arguments.length; i++) {
+      
+    }
   };
 
   // Like extend, but doesn't ever overwrite a key that already
